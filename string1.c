@@ -7,18 +7,19 @@
  *
  * Return: pointer to destination
  */
-char *_strcpy(char *dest, const char *src)
+char *_strcpy(char *dest, char *src)
 {
-    char *ret = dest;
+	int i = 0;
 
-    if (dest == src || src == NULL)
-        return (dest);
-
-    while (*src)
-        *dest++ = *src++;
-    *dest = '\0';
-
-    return (ret);
+	if (dest == src || src == 0)
+		return (dest);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
 }
 
 /**
@@ -29,32 +30,38 @@ char *_strcpy(char *dest, const char *src)
  */
 char *_strdup(const char *str)
 {
-    char *dup_str;
-    size_t len;
+	int length = 0;
+	char *ret;
 
-    if (str == NULL)
-        return (NULL);
-
-    len = _strlen(str);
-    dup_str = malloc(sizeof(char) * (len + 1));
-
-    if (dup_str == NULL)
-        return (NULL);
-
-    _strcpy(dup_str, str);
-    return (dup_str);
+	if (str == NULL)
+		return (NULL);
+	while (*str++)
+		length++;
+	ret = malloc(sizeof(char) * (length + 1));
+	if (!ret)
+		return (NULL);
+	for (length++; length--;)
+		ret[length] = *--str;
+	return (ret);
 }
 
 /**
- * _puts - prints a string to stdout
- * @str: the string to print
+ *_puts - prints an input string
+ *@str: the string to be printed
  *
  * Return: Nothing
  */
-void _puts(const char *str)
+void _puts(char *str)
 {
-    if (str != NULL)
-        write(STDOUT_FILENO, str, _strlen(str));
+	int i = 0;
+
+	if (!str)
+		return;
+	while (str[i] != '\0')
+	{
+		_putchar(str[i]);
+		i++;
+	}
 }
 
 /**
@@ -66,16 +73,15 @@ void _puts(const char *str)
  */
 int _putchar(char c)
 {
-    static char buf[WRITE_BUF_SIZE];
-    static int pos;
+	static int i;
+	static char buf[WRITE_BUF_SIZE];
 
-    if (c == BUF_FLUSH || pos >= WRITE_BUF_SIZE)
-    {
-        write(STDOUT_FILENO, buf, pos);
-        pos = 0;
-    }
-    if (c != BUF_FLUSH)
-        buf[pos++] = c;
-
-    return (1);
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	{
+		write(1, buf, i);
+		i = 0;
+	}
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
+	return (1);
 }
